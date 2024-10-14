@@ -40,7 +40,7 @@ jobs:
         git remote add staging https://github.com/MarshPeter/swe40006-assign.git
         git fetch 
         git checkout staging
-        git merge dev --allow-unrelated-histories -m "Merge from dev to staging" 
+        git merge --no-ff dev --allow-unrelated-histories -m "Merge from dev to staging" 
         git push staging
   
   staging:
