@@ -3,7 +3,7 @@ name: Development Workflow #ensure code is working before previewing deployment
 on: 
   pull_request:
     branches:
-      - Dev # Trigger only when pull request is merged into the dev branch.
+      - dev # Trigger only when pull request is merged into the dev branch.
   workflow_dispatch:
 
 jobs:
@@ -43,7 +43,7 @@ jobs:
         git fetch staging
         git checkout staging
         git merge --no-ff dev --allow-unrelated-histories -m "Merge from dev to staging"
-        git push staging HEAD:staging
+        git push staging
   
   staging:
     environment: Staging
