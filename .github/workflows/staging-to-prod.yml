@@ -16,15 +16,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with: 
+          ref: main
 
-      - name: Set up Node.js (stable version)
+      - name: Set up Node.js (latest version)
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'  # Use the latest stable version of Node.js
+          node-version: 'node'  # Use the latest stable version of Node.js
 
-      - name: Create PR to production
-        run:
-          git push origin production-merge
-          gh pr create --title "Deploy to Production" --body "Requesting deployment from staging to production" --base main --head production-merge
+      - name: Fetch the Staging branch
+        run: git fetch origin staging  # Fetch the Staging branch
+
+      - name: Creates a pull request on main
+        run: |
+          git checkout staging
+          git push origin
+          gh pr create --title "Deploy to Production" --body "Requesting deployment from staging to production"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
