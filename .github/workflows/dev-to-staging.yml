@@ -1,0 +1,41 @@
+name: Development Workflow #ensure code is working before merging into main +  preview deployment
+
+on: 
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  test: 
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Node.js (latest version)
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.18.0  # Using stable version of node
+    
+    - name: npm install, test and build
+      run: |
+        npm install 
+        npm test
+        npm run build
+
+  deploy-to-staging:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          PRODUCTION: false # Don't deploy to production environment
