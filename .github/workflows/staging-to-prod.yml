@@ -17,17 +17,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js (latest version)
+      - name: Set up Node.js (stable version)
         uses: actions/setup-node@v4
         with:
-          node-version: 'node'  # Use the latest stable version of Node.js
+          node-version: '20.x'  # Use the latest stable version of Node.js
 
       - name: Create PR to production
-        run: |
-          git checkout staging
-          git checkout -b production-merge
+        run:
           git push origin production-merge
-          
           gh pr create --title "Deploy to Production" --body "Requesting deployment from staging to production" --base main --head production-merge
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
