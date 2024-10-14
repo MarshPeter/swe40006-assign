@@ -3,10 +3,12 @@ name: Staging to Production
 on:
   push:
     branches:
-      - staging 
+      - staging
+  workflow_dispatch:
 
 jobs:
   deploy-to-deployment:
+    environment: Production
     runs-on: ubuntu-latest
 
     steps:
