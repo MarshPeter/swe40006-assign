@@ -3,7 +3,10 @@ name: Development Workflow #ensure code is working before previewing deployment
 on: 
   pull_request:
     branches:
-      - dev # Trigger only when pull request is merged into the dev branch.
+      - Dev # Trigger only when pull request is merged into the Dev branch.
+  push:
+    branches:
+      - Dev # Trigger on direct push to Dev as well.
   workflow_dispatch:
 
 jobs:
@@ -24,31 +27,32 @@ jobs:
         npm test
         npm run build
 
-  deploy-to-staging:
+  merge-to-staging:
     environment: Staging
     runs-on: ubuntu-latest
     needs: test
 
     steps:
-    - name: Checkout
+    - name: Checkout Staging branch
       uses: actions/checkout@v4
       with:
-        ref: dev
+        ref: staging  # Explicitly checkout the staging branch
 
-    - name: Push code to staging
-      run: |
-        git config --local user.email "github-actions@github.com"
-        git config --local user.name "GitHub Actions"
-        git remote add staging https://github.com/MarshPeter/swe40006-assign.git
-        git fetch staging
-        git checkout staging
-        git merge --no-ff dev --allow-unrelated-histories -m "Merge from dev to staging"
-        git push staging
+    - name: Fetch the Dev branch
+      run: git fetch origin dev  # Fetch the Dev branch
+
+    - name: Merge Dev into Staging
+      run: git merge origin/dev --allow-unrelated-histories -m "Merge from Dev to Staging"
+
+    - name: Push code to Staging
+      run: git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   staging:
     environment: Staging
     runs-on: ubuntu-latest
-    needs: deploy-to-staging
+    needs: merge-to-staging
 
     steps:
     - name: Checkout
