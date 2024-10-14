@@ -25,7 +25,6 @@ jobs:
       - name: Create PR to production
         run: |
           git checkout staging
-          git remote add origin https://github.com/MarshPeter/swe40006-assign.git
           git checkout -b production-merge
           git push origin production-merge
           
