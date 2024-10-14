@@ -7,6 +7,7 @@ import styles from "./Calc.module.css";
 const Calculator = () => {
   const [numA, setNumA] = useState("");
   const [numB, setNumB] = useState("");
+  const [reaction, setReaction] = useState("");
   const [result, setResult] = useState(null);
 
   const handleAddition = () => {
@@ -21,24 +22,38 @@ const Calculator = () => {
     setResult(multiply(Number(numA), Number(numB)));
   };
 
+  const asciiReaction = () => {
+    if (isNaN(result) || result === '') {
+      return "૮(˶ㅠ︿ㅠ)ა";  // If the result is invalid
+    } 
+    else {
+      return "ヾ( ˃ᴗ˂ )◞ • *✰";  // If the result is valid
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setReaction(asciiReaction());
+  };
+
   return (
     <div className={styles.wrapper}>
       <form
         className={styles.calculatorForm}
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={handleSubmit}
       >
         <h1 className={styles.heading}>Simple Calculator</h1>
         <div>
           <input
             type="text"
-            placeholder="Num B"
+            placeholder="Num A"
             className={styles.inputField}
             value={numA}
             onChange={(e) => setNumA(e.target.value)}
           />
           <input
             type="text"
-            placeholder="Num C"
+            placeholder="Num B"
             className={styles.inputField}
             value={numB}
             onChange={(e) => setNumB(e.target.value)}
@@ -57,6 +72,7 @@ const Calculator = () => {
         </div>
         <div className={styles.result}>
           <h2>Results: {result !== null ? result : "No calculation yet"}</h2>
+          {reaction && <p>{reaction}</p>}
         </div>
       </form>
     </div>
