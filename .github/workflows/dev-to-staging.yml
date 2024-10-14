@@ -3,10 +3,10 @@ name: Development Workflow #ensure code is working before previewing deployment
 on: 
   pull_request:
     branches:
-      - Dev # Trigger only when pull request is merged into the Dev branch.
+      - dev # Trigger only when pull request is merged into the Dev branch.
   push:
     branches:
-      - Dev # Trigger on direct push to Dev as well.
+      - dev # Trigger on direct push to Dev as well.
   workflow_dispatch:
 
 jobs:
