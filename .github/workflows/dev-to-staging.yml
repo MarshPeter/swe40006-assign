@@ -3,7 +3,7 @@ name: Development Workflow #ensure code is working before previewing deployment
 on: 
   pull_request:
     branches:
-      - dev # Trigger only when pull request is merged into the staging branch.
+      - Dev # Trigger only when pull request is merged into the dev branch.
   workflow_dispatch:
 
 jobs:
@@ -32,13 +32,35 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        ref: dev
 
     - name: Push code to staging
       run: |
-        git config --local user.email "github-actions@github.com"
-        git config --local user.name "GitHub Actions"
+        git config user.email "89786258+00krp@users.noreply.github.com"
+        git config user.name "00krp"
         git remote add staging https://github.com/MarshPeter/swe40006-assign.git
-        git fetch staging
         git checkout staging
-        git merge --no-ff dev -m "Merge from dev to staging"
-        git push staging HEAD:staging
+        git merge --no-ff dev --allow-unrelated-histories -m "Merge from dev to staging" 
+        git push staging
+  
+  staging:
+    environment: Staging
+    runs-on: ubuntu-latest
+    needs: deploy-to-staging
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js (latest version)
+      uses: actions/setup-node@v4
+
+    - name: Create Pull Request to Prod
+      uses: BetaHuhn/deploy-to-vercel-action@v1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        PRODUCTION: false # Don't deploy to production environment
