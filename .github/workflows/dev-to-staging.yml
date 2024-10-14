@@ -1,9 +1,10 @@
-name: Development Workflow #ensure code is working before merging into main +  preview deployment
+name: Development Workflow #ensure code is working before previewing deployment
 
 on: 
   pull_request:
     branches:
-      - dev
+      - Dev # Trigger only when pull request is merged into the staging branch.
+  workflow_dispatch:
 
 jobs:
   test: 
@@ -15,7 +16,7 @@ jobs:
     - name: Set up Node.js (latest version)
       uses: actions/setup-node@v4
       with:
-        node-version: 20.18.0  # Using stable version of node
+        node-version: '20.x'  # Using stable version of node
     
     - name: npm install, test and build
       run: |
@@ -24,17 +25,20 @@ jobs:
         npm run build
 
   deploy-to-staging:
+    environment: Staging
     runs-on: ubuntu-latest
     needs: test
-    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
 
-      - name: Push code to staging
-        run: |
-          git remote add staginghttps://github.com/MarshPeter/swe40006-assign.git
-          git fetch staging
-          git checkout staging
-          git merge --no-ff dev -m "Merge from dev to staging"
-          git push staging HEAD:staging
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Push code to staging
+      run: |
+        git config --local user.email "github-actions@github.com"
+        git config --local user.name "GitHub Actions"
+        git remote add staging https://github.com/MarshPeter/swe40006-assign.git
+        git fetch staging
+        git checkout staging
+        git merge --no-ff dev -m "Merge from dev to staging"
+        git push staging HEAD:staging
