@@ -8,18 +8,27 @@ on:
 
 jobs:
   deploy-to-deployment:
-    environment: Production
+    environment: Staging
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to push changes
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Deploy to Vercel Action
-      uses: BetaHuhn/deploy-to-vercel-action@v1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        PRODUCTION: false # Don't deploy to production environment
+      - name: Set up Node.js (latest version)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'node'  # Use the latest stable version of Node.js
+
+      - name: Create PR to production
+        run: |
+          git checkout staging
+          git remote add origin https://github.com/MarshPeter/swe40006-assign.git
+          git checkout -b production-merge
+          git push origin production-merge
+          
+          gh pr create --title "Deploy to Production" --body "Requesting deployment from staging to production" --base main --head production-merge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
