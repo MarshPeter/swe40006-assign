@@ -10,12 +10,15 @@ jobs:
   deploy-to-deployment:
     environment: Staging
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions:
+      contents: write
+      pull-requests: write
     
     steps:
+
       # Create Pull Request from Staging to Main
       - name: Create Pull Request from Staging to Main
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: staging  # Source branch (staging)
