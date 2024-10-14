@@ -31,14 +31,14 @@ const Calculator = () => {
         <div>
           <input
             type="text"
-            placeholder="Num A"
+            placeholder="Num C"
             className={styles.inputField}
             value={numA}
             onChange={(e) => setNumA(e.target.value)}
           />
           <input
             type="text"
-            placeholder="Num B"
+            placeholder="Num D"
             className={styles.inputField}
             value={numB}
             onChange={(e) => setNumB(e.target.value)}
