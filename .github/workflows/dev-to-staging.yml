@@ -37,12 +37,13 @@ jobs:
 
     - name: Push code to staging
       run: |
-        git config user.email "github-actions@github.com""
-        git config user.name "GitHub Actions"
+        git config --local user.email "github-actions@github.com"
+        git config --local user.name "GitHub Actions"
         git remote add staging https://github.com/MarshPeter/swe40006-assign.git
+        git fetch staging
         git checkout staging
         git merge --no-ff dev --allow-unrelated-histories -m "Merge from dev to staging" 
-        git push staging
+        git push staging HEAD:staging
   
   staging:
     environment: Staging
