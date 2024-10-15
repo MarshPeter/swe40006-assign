@@ -39,7 +39,10 @@ jobs:
       run: git fetch origin dev  # Fetch the Dev branch
 
     - name: Merge Dev into Staging
-      run: git merge origin/dev --allow-unrelated-histories -m "Merge from Dev to Staging"
+      run: |
+        git config --global user.email "github-actions@github.com"
+        git config --global user.name "GitHub Actions"
+        git merge origin/dev --allow-unrelated-histories -m "Merge from Dev to Staging"
 
     - name: Push code to Staging
       run: git push
