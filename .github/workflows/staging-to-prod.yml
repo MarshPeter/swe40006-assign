@@ -11,23 +11,14 @@ jobs:
     environment: Staging
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Required to push changes
-
+      contents: write
+      pull-requests: write
+    
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js (latest version)
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'node'  # Use the latest stable version of Node.js
-
-      - name: Create PR to production
-        run: |
-          git checkout staging
-          git checkout -b production-merge
-          git push origin production-merge
-          
-          gh pr create --title "Deploy to Production" --body "Requesting deployment from staging to production" --base main --head production-merge
+      - name: Create pull request
+        run: gh pr create --base main --head staging --title 'Merge staging into main' --body 'Created by Github action'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
