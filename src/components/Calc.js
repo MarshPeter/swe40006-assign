@@ -8,6 +8,7 @@ const Calculator = () => {
   const [numA, setNumA] = useState("");
   const [numB, setNumB] = useState("");
   const [result, setResult] = useState(null);
+  const [reaction, setReaction] = useState(null);
 
   const handleAddition = () => {
     setResult(add(Number(numA), Number(numB)));
@@ -21,11 +22,24 @@ const Calculator = () => {
     setResult(multiply(Number(numA), Number(numB)));
   };
 
+  const asciiReaction = () => {
+    if (isNaN(result) || result === '') {
+      return "૮(˶ㅠ︿ㅠ)ა";  // If the result is invalid
+    } else {
+      return "ヾ( ˃ᴗ˂ )◞ • *✰";  // If the result is valid
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setReaction(asciiReaction());
+  };
+
   return (
     <div className={styles.wrapper}>
       <form
         className={styles.calculatorForm}
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={handleSubmit}
       >
         <h1 className={styles.heading}>Simple Calculator</h1>
         <div>
@@ -57,6 +71,7 @@ const Calculator = () => {
         </div>
         <div className={styles.result}>
           <h2>Results: {result !== null ? result : "No calculation yet"}</h2>
+          <h2>{reaction}</h2>
         </div>
       </form>
     </div>

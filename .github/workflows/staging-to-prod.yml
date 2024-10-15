@@ -11,23 +11,30 @@ jobs:
     environment: Staging
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Required to push changes
-
+      contents: write
+      pull-requests: write
+    
     steps:
-      - name: Checkout code
+
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js (latest version)
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'node'  # Use the latest stable version of Node.js
+      - name: Pull latest changes from Staging
+        run: git pull origin staging --rebase
 
-      - name: Create PR to production
-        run: |
-          git checkout staging
-          git checkout -b production-merge
-          git push origin production-merge
-          
-          gh pr create --title "Deploy to Production" --body "Requesting deployment from staging to production" --base main --head production-merge
+      - name: Push code to Staging
+        run: git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Create Pull Request from Staging to Main
+      - name: Create Pull Request from Staging to Main
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: staging  # Source branch (staging)
+          base: main       # Target branch (main)
+          title: "Automated PR: Merge Staging into Main"
+          body: "This PR merges changes from staging into the main branch."
+          labels: |
+            automated-pr
