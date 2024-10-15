@@ -8,7 +8,7 @@ const Calculator = () => {
   const [numA, setNumA] = useState("");
   const [numB, setNumB] = useState("");
   const [result, setResult] = useState(null);
-  const [reaction, useReaction] = useState(null);
+  const [reaction, setReaction] = useState(null);
 
   const handleAddition = () => {
     setResult(add(Number(numA), Number(numB)));
@@ -32,7 +32,7 @@ const Calculator = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    useReaction(asciiReaction());
+    setReaction(asciiReaction());
   };
 
   return (
