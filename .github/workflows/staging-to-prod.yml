@@ -15,26 +15,10 @@ jobs:
       pull-requests: write
     
     steps:
-
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Pull latest changes from Staging
-        run: git pull origin staging --rebase
-
-      - name: Push code to Staging
-        run: git push
+      - name: Create pull request
+        run: gh pr create --base main --head staging --title 'Merge staging into main' --body 'Created by Github action'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Create Pull Request from Staging to Main
-      - name: Create Pull Request from Staging to Main
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: staging  # Source branch (staging)
-          base: main       # Target branch (main)
-          title: "Automated PR: Merge Staging into Main"
-          body: "This PR merges changes from staging into the main branch."
-          labels: |
-            automated-pr
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
