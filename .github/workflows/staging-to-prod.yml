@@ -18,17 +18,8 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Pull latest changes from Staging
-        run: git pull origin staging
-
-      - name: Fetch the Main branch
-        run: git fetch origin main 
-
-      - name: Push code to Staging
-        run: git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with: 
+          ref: staging
 
       # Create Pull Request from Staging to Main
       - name: Create Pull Request from Staging to Main
