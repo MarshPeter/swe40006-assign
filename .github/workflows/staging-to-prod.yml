@@ -20,7 +20,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Pull latest changes from Staging
-        run: git pull origin staging --rebase
+        run: git pull origin staging
+
+      - name: Fetch the Main branch
+        run: git fetch origin main 
 
       - name: Push code to Staging
         run: git push
