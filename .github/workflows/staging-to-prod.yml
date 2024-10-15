@@ -19,8 +19,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js (latest version)
-        uses: actions/setup-node@v4
+      - name: Pull latest changes from Staging
+        run: git pull origin staging --rebase
+
+      - name: Push code to Staging
+        run: git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Create Pull Request from Staging to Main
       - name: Create Pull Request from Staging to Main
