@@ -3,7 +3,7 @@ name: Development Workflow #ensure code is working before previewing deployment
 on: 
   pull_request:
     branches:
-      - Dev # Trigger only when pull request is merged into the dev branch.
+      - dev # Trigger only when pull request is merged into the Dev branch.
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    - name: Set up Node.js (latest version)
+    - name: Set up Node.js (stable version)
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'  # Using stable version of node
@@ -24,43 +24,24 @@ jobs:
         npm test
         npm run build
 
-  deploy-to-staging:
+  merge-to-staging:
     environment: Staging
     runs-on: ubuntu-latest
     needs: test
 
     steps:
-    - name: Checkout
+    - name: Checkout Staging branch
       uses: actions/checkout@v4
       with:
-        ref: dev
+        ref: staging  # Explicitly checkout the staging branch
 
-    - name: Push code to staging
-      run: |
-        git config user.email "89786258+00krp@users.noreply.github.com"
-        git config user.name "00krp"
-        git remote add staging https://github.com/MarshPeter/swe40006-assign.git
-        git checkout staging
-        git merge --no-ff dev --allow-unrelated-histories -m "Merge from dev to staging" 
-        git push staging
-  
-  staging:
-    environment: Staging
-    runs-on: ubuntu-latest
-    needs: deploy-to-staging
+    - name: Fetch the Dev branch
+      run: git fetch origin dev  # Fetch the Dev branch
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+    - name: Merge Dev into Staging
+      run: git merge origin/dev --allow-unrelated-histories -m "Merge from Dev to Staging"
 
-    - name: Set up Node.js (latest version)
-      uses: actions/setup-node@v4
-
-    - name: Create Pull Request to Prod
-      uses: BetaHuhn/deploy-to-vercel-action@v1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        PRODUCTION: false # Don't deploy to production environment
+    - name: Push code to Staging
+      run: git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
