@@ -16,4 +16,10 @@ describe('test math calculation functions', () => {
         expect(result).toBe(10);
     })
 
+    it('add informs user what needs to change if a number isn\'t valid', () => {
+        expect(add("A", 2)).toBe("First input needs to be a valid number.");
+        expect(add(3, "B")).toBe("Second input needs to be a valid number.");
+        expect(add("A", "B")).toBe("Both inputs need to be a valid number.");
+    })
+
 })
