@@ -17,8 +17,8 @@ describe('test math calculation functions', () => {
     })
 
     it('when one input is not a number, the user will be correctly informed', () => {
-        expect(add("A", 3)).toBe("First input needs to be a valid number.");
-        expect(add(2, "B")).toBe("Second input needs to be a valid number.");
-        expect(add("A", "B")).toBe("Both inputs need to be a valid number.");
+        expect(add("A", 3)).toBe("First input needs to be a valid number");
+        expect(add(2, "B")).toBe("Second input needs to be a valid number");
+        expect(add("A", "B")).toBe("Both inputs need to be a valid number");
     })
 })
