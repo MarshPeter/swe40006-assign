@@ -27,4 +27,10 @@ describe('test math calculation functions', () => {
         expect(subtract(3, "B")).toBe("Second input needs to be a valid number.");
         expect(subtract("A", "B")).toBe("Both inputs need to be a valid number.");
     })
+
+    it('multiple correctly tells user what input is wrong if not valid numbers', () => {
+        expect(subtract("A", 2)).toBe("First input needs to be a valid number.");
+        expect(subtract(3, "B")).toBe("Second input needs to be a valid number.");
+        expect(subtract("A", "B")).toBe("Both inputs need to be a valid number.");
+    })
 })
