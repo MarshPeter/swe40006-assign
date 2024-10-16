@@ -20,5 +20,6 @@ export const subtract = (numA, numB) => {
 };
 
 export const multiply = (numA, numB) => {
-  return numA * numB;
+  const areValidNumbers = validNumbers(numA, numB);
+  return areValidNumbers === "" ? numA * numB: areValidNumbers;
 };
