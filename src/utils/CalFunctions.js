@@ -15,7 +15,8 @@ export const add = (numA, numB) => {
 };
 
 export const subtract = (numA, numB) => {
-  return numA - numB;
+  const areValidNumbers = validNumbers(numA, numB);
+  return areValidNumbers === "" ? numA - numB : areValidNumbers;
 };
 
 export const multiply = (numA, numB) => {
