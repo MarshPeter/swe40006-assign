@@ -2,6 +2,7 @@ name: Development Workflow #ensure code is working before previewing deployment
 
 on: 
   pull_request:
+    types: [closed]
     branches:
       - dev # Trigger only when pull request is merged into the Dev branch.
   workflow_dispatch:
